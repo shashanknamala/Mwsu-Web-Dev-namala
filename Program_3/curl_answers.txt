@@ -1,0 +1,57 @@
+================================================
+1.Find user with email matching "existing value"
+
+curl -X "GET" "http://45.55.252.21/api/api.php/users?filter=email,eq,namalashashank92@gmail.com"
+
+{"users":{"columns":["user_id","fname","lname","display_name","email","password"],"records":[["10","Shashank","Namala","Shank","namalashashank92@gmail.com","$2y$10$i.Z0adSv\/iu4xYrGVktbEOKd99pksMBfVj1MO90f2luJQpi9HhxYO"]]}}
+
+=================================================
+
+2.Add a new user with the following information:
+
+curl -H "Content-Type: application/json" -X "POST" http://45.55.252.21/api/api.php/users -d '{"fname":"Salman","lname":"Khan","display_name":"coolasiwannabe","email":"salmankhan@indianactors.org","password":"123456789"}'
+
+
+=================================================
+
+3.Find all products with a price equal to 99.99
+
+curl -X "GET" "0http://45.55.252.21/api/api.php/products?filter=price,eq,99.99"
+
+==================================================
+
+4.Find all products that have the word "tablet" AND the word "acer" in the description.
+
+curl --globoff -X "GET" "http://45.55.252.21/api/api.php/products?filter[]=desc,cs,"Acer"&filter[]=decsc,eq,"tablet"&satify=all"
+
+====================================================
+
+5.Find all "Acer" tablets that are less than 100 dollars.
+
+
+curl -X "GET" "http://45.55.252.21/api/api.php/products?filter=price,eq,100"
+
+====================================================
+
+6.Find all the images for laptops that have intel i7 processors and ssd drives.
+
+curl --globoff -X "GET" "http://45.55.252.21/api/api.php/products?filter[]=desc,cs,intel&filter[]=desc,cs,i7&columns=img&desc,cs,ssd&satify=all"
+
+======================================================
+
+7.Find all cellphones that are NOT apple products.
+
+curl --globoff -X "GET" "http://45.55.252.21/api/api.php/products?filter[]=category,eq,smartphone&filter[]=desc,ne,apple&filter[]=desc,ne,Apple&satify=all"
+
+=======================================================
+
+8.Update all products that have a price of 0.00 to have a price of 0.13 cents
+
+curl -H "Content-Type: application/json" -X "PUT" "http://45.55.252.21/api/api.php/products?filter=price,eq,0.00" -d '{"price":"0.13"}'
+
+======================================================
+
+9.Make sure you can delete from a table using curl.
+
+curl -X "DELETE" "http://45.55.252.21/api/api.php/products/10020"
+
