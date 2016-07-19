@@ -45,65 +45,6 @@
       <thead>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>Mark</td>
-          <td>Tompson</td>
-          <td>the_mark7</td>
-          <td>
-            <img src="https://images-na.ssl-images-amazon.com/images/I/41A4mMSdBJL._AC_US50_.jpg">
-          </td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Ashley</td>
-          <td>Jacobs</td>
-          <td>ash11927</td>
-          <td>
-              <a href="user.html"><i class="icon-pencil"></i></a>
-              <a href="#myModal" role="button" data-toggle="modal"><i class="icon-remove"></i></a>
-          </td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td>Audrey</td>
-          <td>Ann</td>
-          <td>audann84</td>
-          <td>
-              <a href="user.html"><i class="icon-pencil"></i></a>
-              <a href="#myModal" role="button" data-toggle="modal"><i class="icon-remove"></i></a>
-          </td>
-        </tr>
-        <tr>
-          <td>4</td>
-          <td>John</td>
-          <td>Robinson</td>
-          <td>jr5527</td>
-          <td>
-              <a href="user.html"><i class="icon-pencil"></i></a>
-              <a href="#myModal" role="button" data-toggle="modal"><i class="icon-remove"></i></a>
-          </td>
-        </tr>
-        <tr>
-          <td>5</td>
-          <td>Aaron</td>
-          <td>Butler</td>
-          <td>aaron_butler</td>
-          <td>
-              <a href="user.html"><i class="icon-pencil"></i></a>
-              <a href="#myModal" role="button" data-toggle="modal"><i class="icon-remove"></i></a>
-          </td>
-        </tr>
-        <tr>
-          <td>6</td>
-          <td>Chris</td>
-          <td>Albert</td>
-          <td>cab79</td>
-          <td>
-              <a href="user.html"><i class="icon-pencil"></i></a>
-              <a href="#myModal" role="button" data-toggle="modal"><i class="icon-remove"></i></a>
-          </td>
-        </tr>
       </tbody>
     </table>
 </div>
@@ -132,7 +73,7 @@
     </div>
 </div>
 <script>
-$.get( "http://mwsu-webdev.xyz/api/api.php/products?order=id&page=1,10")
+$.get( "http://45.55.252.21/api/api.php/products?order=id&page=1,20")
   .done(function( data ) {
     console.log( data );
     var cols = data.products.columns;
@@ -144,6 +85,24 @@ $.get( "http://mwsu-webdev.xyz/api/api.php/products?order=id&page=1,10")
     col_head = col_head + "<th style=\"width: 36px;\"></th></tr>";
     console.log(col_head);
     $('thead').append(col_head);
+  });
+ $.get( "http://45.55.252.21/api/api.php/products?order=id&page=1,20")
+  .done(function( data ) {
+    var rec = data.products.records;
+    for(var i=0;i<rec.length;i++){
+		var rec_body = "<tr>";
+		for(var j=0;j<rec[i].length;j++)
+		{
+			//console.log(rec[i][j]);
+			if(j< (rec[i].length)-1){
+			rec_body = rec_body + "<td>"+rec[i][j]+"</td>"; }
+			else{
+			rec_body = rec_body + "<td><img src="+rec[i][j].replace("\~","50",-1)+"></td>";}
+		}
+		rec_body = rec_body + "<td style=\"width: 36px;\"></td></tr>";
+		//console.log(rec_body);
+		$('tbody').append(rec_body);
+    }
   });
 </script>
 <br>
