@@ -11,6 +11,4 @@ Email ID: namalashashank92@gmail.com
 
 Phone no: +1 940 337 2406
 
-Link to the Server: http://45.55.252.21/
-
-http://shank-webdev.tech/
+Link to the Server: http://shank-webdev.tech/ (http://45.55.252.21/)
