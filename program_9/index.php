@@ -145,7 +145,7 @@ $sid = session_id();
             </form>
         </div>
 	</div>
-	<div id="dialog-1" title="Dialog Title goes here...">This my first jQuery UI Dialog!</div>
+	<div id="dialog-1" title="Dialog Title goes here..."></div>
 	<div class="row">
 			<div class="panel panel-info">
 				<div class="panel-heading">
