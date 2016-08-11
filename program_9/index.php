@@ -140,7 +140,7 @@ $sid = session_id();
             <form id="custom-search-form" class="form-search form-horizontal pull-right">
                 <div class="input-append span12">
                     <input type="text" class="search-query" placeholder="Search" id="search-keys">
-                    <button type="submit" class="btn" id="search-btn"><i class="glyphicon glyphicon-search"></i></button>
+                    <button type="submit" class="btn search-se" id="search-btn"><i class="glyphicon glyphicon-search"></i></button>
                 </div>
             </form>
         </div>
@@ -328,16 +328,20 @@ $sid = session_id();
     */
 
 
-    function loadTableData(page, page_size,sort,order) {
-	
+    function loadTableData(page, page_size,sort,order,url,string) {
+		
+		
 		var sort = typeof sort !== 'undefined' ?  sort.trim() : "id";
 		var order = typeof order !== 'undefined' ?  ","+order : "";
-    
+		var url1 = "https://shank-webdev.tech/api/api.php/products?order="+sort+order+"&page=" + page + "," + page_size;
+		var url = typeof url !== 'undefined' ?  "https://shank-webdev.tech/api/api.php/products?order=id&page=" + page + "," + page_size+"&filter=desc,cs,"+string : url1; 
+		console.log(url);
+		console.log(sort);
         myWait.show();
                 
         // Perform a get request to our api passing the page number and page size as parameters
-		console.log("https://shank-webdev.tech/api/api.php/products?order="+sort+order+"&page=" + page + "," + page_size);
-        $.get("https://shank-webdev.tech/api/api.php/products?order="+sort+order+"&page=" + page + "," + page_size)
+		//console.log("https://shank-webdev.tech/api/api.php/products?order="+sort+order+"&page=" + page + "," + page_size);
+        $.get(url)
 
         // The '.done' method fires when the get request completes
         .done(function(data) {
@@ -421,7 +425,8 @@ $sid = session_id();
 		});
 	});
     
-    function getTotalPages(){
+    function getTotalPages(url){
+				
         $.get("https://shank-webdev.tech/program_9/total_pages.txt")
 
         // The '.done' method fires when the get request completes
@@ -442,101 +447,118 @@ $sid = session_id();
 
     }
 
-		$('#search-btn').click(function(event){
+	$('#search-btn').click(function(event){
 		event.preventDefault();
 		console.log($('#search-keys').val());
 		var string=$('#search-keys').val();
-		var url="https://shank-webdev.tech/api/api.php/products?filter=desc,cs,"+string;
-        $.get(url)
-        // The '.done' method fires when the get request completes
-        .done(function(data) {
-			console.log(url);
-			myWait.show();
-                
-        $.get(url)
-
-        // The '.done' method fires when the get request completes
-        .done(function(data) {
-        
-           // console.log(data);
-
-            // Pull the column names out of our json object 
-            var cols = data.products.columns;
-
-            // Start an html string with a row tag
-            col_head = "<tr>";
-            for (var i = 0; i < cols.length; i++) {
-
-                // Continuously append header tags to our row
-                col_head += "<th nowrap> " + cols[i] +"</th>";
-				
-            }
-
-            // Finish off our row with an empty header tag 
-            col_head = col_head + "<th style=\"width: 36px;\"></th></tr>";
-
-            // Append our new html to this pages only 'thead' tag
-            $('thead').html(col_head);
-
-            // Pull the products out of our json object 
-            var records = data.products.records;
-
-            // Start an empty html string
-            rows = "";
-			if(records.length>1)
-			{
-            for (var i = 0; i < records.length; i++) {
-
-                //Start a new row for each product and put the product id in a data-element
-                rows = rows + "<tr data-id="+records[i][0]+" id=id"+records[i][0]+">";
-
-                // Loop through each item for a product and append a table data tag to our row
-                for (var j = 0; j < records[i].length; j++) {
-                
-                                
-                    // This is the last item in the record set so it's the img url.
-                    if(j == records[i].length-1){
-                        var result = records[i][j] .split(' ');
-                        var img = result[0].replace("~","25");
-                        records[i][j] = "<img src="+img+">";
-                    }
-                    rows = rows + "<td>" + records[i][j] + "</td>";
-                }
-                rows = rows + '<td style="vertical-align:middle" nowrap><i class="fa fa-shopping-cart" aria-hidden="true"></i></td>';
-                // Finish the row for a product
-                rows = rows + "</tr>";
-            }
-
-            // At this point "rows" should have 'page_size' number of items in it,
-            // so append all those rows to the body of the table.
-            $('tbody').html(rows);
-            
-				myWait.hide();
-			
-		
-            $('.fa-shopping-cart').click(function(){
-                console.log($(this).closest('tr').data( "id" ));
-                
-				var item = [];
-                $(this).closest('tr').find('td').each(function(){
-					console.log($(this).text());
-					item.push($(this).html());
-				});
-				console.log(item);
-				addCartItem(item);
-            });
-			}	
-		else
+		if(string.length == 0)
 		{
-			myWait.hide();
-		bootbox.alert("No results found!", function() {
-		});
+			console.log("shank");
+			bootbox.alert("No results found!", function() {
+			});
+		}	
+		else{
+			
+			var url="https://shank-webdev.tech/api/api.php/products?filter=desc,cs,"+string;
+			 myWait.show();       
+			$.get(url)
+
+			// The '.done' method fires when the get request completes
+			.done(function(data) {
+			
+				   // console.log(data);
+					myWait.hide();
+					
+					var total_pages= 10;
+					
+					console.log(total_pages);
+					
+					// Pull the column names out of our json object 
+					var cols = data.products.columns;
+
+					// Start an html string with a row tag
+					col_head = "<tr>";
+					for (var i = 0; i < cols.length; i++) {
+
+						// Continuously append header tags to our row
+						col_head += "<th nowrap> " + cols[i] +"</th>";
+						
+					}
+
+					// Finish off our row with an empty header tag 
+					col_head = col_head + "<th style=\"width: 36px;\"></th></tr>";
+
+					// Append our new html to this pages only 'thead' tag
+					$('thead').html(col_head);
+
+					// Pull the products out of our json object 
+					var records = data.products.records;
+
+					// Start an empty html string
+					rows = "";
+					if(records.length>1)
+					{
+					for (var i = 0; i < records.length; i++) {
+
+						//Start a new row for each product and put the product id in a data-element
+						rows = rows + "<tr data-id="+records[i][0]+" id=id"+records[i][0]+">";
+
+						// Loop through each item for a product and append a table data tag to our row
+						for (var j = 0; j < records[i].length; j++) {
+						
+										
+							// This is the last item in the record set so it's the img url.
+							if(j == records[i].length-1){
+								var result = records[i][j] .split(' ');
+								var img = result[0].replace("~","25");
+								records[i][j] = "<img src="+img+">";
+							}
+							rows = rows + "<td>" + records[i][j] + "</td>";
+						}
+						rows = rows + '<td style="vertical-align:middle" nowrap><i class="fa fa-shopping-cart" aria-hidden="true"></i></td>';
+						// Finish the row for a product
+						rows = rows + "</tr>";
+					}
+					
+					// At this point "rows" should have 'page_size' number of items in it,
+					// so append all those rows to the body of the table.
+					$('tbody').html(rows);
+					
+						myWait.hide();
+					
+				
+					$('.fa-shopping-cart').click(function(){
+						console.log($(this).closest('tr').data( "id" ));
+						
+						var item = [];
+						$(this).closest('tr').find('td').each(function(){
+							console.log($(this).text());
+							item.push($(this).html());
+						});
+						console.log(item);
+						addCartItem(item);
+					});
+					}	
+				else
+				{
+					myWait.hide();
+					bootbox.alert("No results found!", function() {
+				});
+				}
+				
+				$('#pagination-demo').twbsPagination('destroy');
+				$('#pagination-demo').twbsPagination({
+					totalPages: total_pages,
+					visiblePages: 10,
+					onPageClick: function (event, page) {
+						$('#page-content').text('Page ' + page);
+						loadTableData(page,10,"","",url,string);
+					}
+				});
+			
+			});
 		}
-       });
-			
-			
-			
-		});
+
 	});
     
 	function addCartItem(item){
@@ -596,7 +618,14 @@ $sid = session_id();
 		s4() + '-' + s4() + s4() + s4();
 	}
 	
-    getTotalPages();
+	if (jQuery('.search-se').data('clicked'))
+	{
+		console.log(clicked);
+	}
+	else{
+		getTotalPages();
+	}
+		
 
 
 }(jQuery));
